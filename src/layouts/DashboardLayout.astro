@@ -1,0 +1,64 @@
+---
+// DashboardLayout.astro
+---
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gridiron Dash</title>
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <div class="logo">
+          <h1>Gridiron Dash</h1>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Dashboard</a></li>
+          <li><a href="/teams">Teams</a></li>
+          <li><a href="/players">Players</a></li>
+          <li><a href="/stats">Statistics</a></li>
+          <li><a href="/settings">Settings</a></li>
+        </ul>
+      </nav>
+      <!-- Main Content Area -->
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="search-bar">
+            <input type="text" placeholder="Search..." />
+          </div>
+          <div class="user-menu">
+            <span class="username">John Doe</span>
+            <img class="avatar" src="/images/avatar.png" alt="User Avatar" />
+          </div>
+        </header>
+        <!-- Content Section -->
+        <section class="content">
+          <slot />
+        </section>
+      </main>
+      <!-- Right Sidebar for Stats -->
+      <aside class="stats-sidebar">
+        <div class="stats-header">
+          <h2>Quick Stats</h2>
+        </div>
+        <div class="stats-content">
+          <div class="stat-card">
+            <h3>Active Games</h3>
+            <p class="count">12</p>
+          </div>
+          <div class="stat-card">
+            <h3>Live Updates</h3>
+            <p class="count">45</p>
+          </div>
+          <div class="stat-card">
+            <h3>Teams Online</h3>
+            <p class="count">32</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </body>
+</html> 

@@ -1,0 +1,56 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout>
+  <div class="dashboard-content">
+    <h2>Welcome to Gridiron Dash</h2>
+    <p>Your ultimate football statistics dashboard</p>
+    
+    <div class="stats-grid">
+      <div class="stat-box">
+        <h3>Today's Games</h3>
+        <div class="stat-value">8</div>
+      </div>
+      <div class="stat-box">
+        <h3>Live Updates</h3>
+        <div class="stat-value">24</div>
+      </div>
+      <div class="stat-box">
+        <h3>Active Users</h3>
+        <div class="stat-value">156</div>
+      </div>
+    </div>
+  </div>
+</DashboardLayout>
+
+<style>
+  .dashboard-content {
+    padding: 2rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .stat-box {
+    background: linear-gradient(135deg, #3498db, #2c3e50);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .stat-box h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+</style> 

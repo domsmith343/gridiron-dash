@@ -1,0 +1,53 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Gridiron Dash
+    link(rel="stylesheet", href="/styles/global.css")
+    
+  body
+    .dashboard-container
+      //- Sidebar Navigation
+      nav.sidebar
+        .logo
+          h1 Gridiron Dash
+        ul.nav-links
+          li
+            a(href="/") Dashboard
+          li
+            a(href="/teams") Teams
+          li
+            a(href="/players") Players
+          li
+            a(href="/stats") Statistics
+          li
+            a(href="/settings") Settings
+      
+      //- Main Content Area
+      main.main-content
+        header.top-bar
+          .search-bar
+            input(type="text", placeholder="Search...")
+          .user-menu
+            span.username John Doe
+            img.avatar(src="/images/avatar.png", alt="User Avatar")
+        
+        //- Content Section
+        section.content
+          block content
+          
+      //- Right Sidebar for Stats
+      aside.stats-sidebar
+        .stats-header
+          h2 Quick Stats
+        .stats-content
+          .stat-card
+            h3 Active Games
+            p.count 12
+          .stat-card
+            h3 Live Updates
+            p.count 45
+          .stat-card
+            h3 Teams Online
+            p.count 32 
