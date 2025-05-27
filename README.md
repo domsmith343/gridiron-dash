@@ -1,37 +1,37 @@
-# Astro Starter Kit: Minimal
+# Gridiron Dash
 
-```sh
-npm create astro@latest -- --template minimal
-```
+A clean, fact-focused NFL dashboard that provides real-time scores, comprehensive stats, and news without opinions or predictions. Built as a modern alternative to ESPN, it prioritizes current game action and data-driven insights over commentary.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## Features
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- Live game scores and updates
+- Comprehensive NFL statistics
+- Team and player analytics
+- Clean, minimal design
+- Dark/light mode support
+- Mobile-responsive interface
 
-## 🚀 Project Structure
+## Tech Stack
 
-Inside of your Astro project, you'll see the following folders and files:
+- Astro
+- React
+- Tailwind CSS
+- TypeScript
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Getting Started
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open [http://localhost:4321](http://localhost:4321) in your browser
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
+## Available Scripts
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -39,9 +39,20 @@ All commands are run from the root of the project, from a terminal:
 | `npm run dev`             | Starts local dev server at `localhost:4321`      |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## Project Structure
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```text
+/
+├── public/          # Static assets
+├── src/
+│   ├── components/  # React components
+│   ├── layouts/     # Page layouts
+│   ├── pages/       # Astro pages
+│   └── styles/      # Global styles
+└── package.json
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
