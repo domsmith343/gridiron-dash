@@ -1,14 +1,14 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { GameCard } from '../components/GameCard';
+import GamesSection from '../components/GamesSection';
 import '../styles/global.css';
 ---
 
-<Layout title="Gridiron Live - NFL Dashboard">
+<Layout title="Gridiron Dash - NFL Dashboard">
 	<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
 		<div class="container py-8">
 			<h1 class="text-4xl font-extrabold text-primary-700 dark:text-primary-200 mb-8 drop-shadow">
-				Gridiron Live
+				Gridiron Dash
 			</h1>
 			
 			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -19,32 +19,7 @@ import '../styles/global.css';
 						<span class="inline-block bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded">LIVE</span>
 					</h2>
 					<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-						<GameCard
-							client:load
-							homeTeam="Kansas City Chiefs"
-							awayTeam="San Francisco 49ers"
-							homeScore={25}
-							awayScore={22}
-							status="LIVE"
-							time="Q4 2:00"
-						/>
-						<GameCard
-							client:load
-							homeTeam="Buffalo Bills"
-							awayTeam="Miami Dolphins"
-							homeScore={31}
-							awayScore={28}
-							status="FINAL"
-						/>
-						<GameCard
-							client:load
-							homeTeam="Dallas Cowboys"
-							awayTeam="Philadelphia Eagles"
-							homeScore={0}
-							awayScore={0}
-							status="UPCOMING"
-							time="8:20 PM ET"
-						/>
+						<GamesSection client:load />
 					</div>
 				</section>
 
