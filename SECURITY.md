@@ -13,6 +13,7 @@ We currently support the following versions with security updates:
 If you discover a security vulnerability within this project, please send an email to [YOUR_EMAIL]. All security vulnerabilities will be promptly addressed.
 
 Please include the following information in your report:
+
 - Type of issue (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)
 - Full paths of source file(s) related to the manifestation of the issue
 - The location of the affected source code (tag/branch/commit or direct URL)
@@ -24,6 +25,7 @@ Please include the following information in your report:
 ## Security Measures
 
 This project implements the following security measures:
+
 - Environment variables for sensitive data
 - Regular dependency updates
 - Security headers
@@ -38,4 +40,4 @@ This project implements the following security measures:
 3. Use environment variables for configuration
 4. Follow the principle of least privilege
 5. Implement proper input validation
-6. Use HTTPS for all communications 
+6. Use HTTPS for all communications
