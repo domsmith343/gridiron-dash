@@ -1,0 +1,112 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GameDetail from '../../components/GameDetail';
+import ConnectionStatus from '../../components/ConnectionStatus';
+import '../../styles/global.css';
+
+const { id } = Astro.params;
+---
+
+<Layout title={`Game Details - Gridiron Dash`}>
+  <main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div class="container mx-auto px-4 py-8">
+      <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        <div class="flex items-center gap-3">
+          <a href="/" class="text-primary-700 dark:text-primary-200 hover:underline flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Dashboard
+          </a>
+          <ConnectionStatus client:load />
+        </div>
+        <div class="flex items-center gap-4 mt-4 md:mt-0">
+          <button class="bg-white/80 dark:bg-gray-800/80 p-2 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </button>
+        </div>
+      </header>
+      
+      <GameDetail client:load gameId={id} />
+      
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
+          <h2 class="text-2xl font-semibold text-primary-700 dark:text-primary-200 mb-4 flex items-center gap-2">
+            <span>Player Stats</span>
+            <span class="inline-block bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded">STATS</span>
+          </h2>
+          <div class="tabs">
+            <div class="tab-list flex border-b border-gray-200 dark:border-gray-700 mb-4" role="tablist">
+              <button class="tab-item px-4 py-2 font-medium text-sm border-b-2 border-primary-500 text-primary-600 dark:text-primary-400" role="tab" aria-selected="true">Passing</button>
+              <button class="tab-item px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" role="tab" aria-selected="false">Rushing</button>
+              <button class="tab-item px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" role="tab" aria-selected="false">Receiving</button>
+              <button class="tab-item px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" role="tab" aria-selected="false">Defense</button>
+            </div>
+            
+            <div class="tab-content">
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead class="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                      <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Player</th>
+                      <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Comp/Att</th>
+                      <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Yards</th>
+                      <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">TD</th>
+                      <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">INT</th>
+                      <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rating</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
+                    <tr>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Patrick Mahomes</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">24/35</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">303</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">3</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">0</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">128.4</td>
+                    </tr>
+                    <tr>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">Josh Allen</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">22/32</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">274</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">2</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">1</td>
+                      <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">102.7</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
+          <h2 class="text-2xl font-semibold text-primary-700 dark:text-primary-200 mb-4 flex items-center gap-2">
+            <span>Game Highlights</span>
+            <span class="inline-block bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-1 rounded">HIGHLIGHTS</span>
+          </h2>
+          <ul class="space-y-4">
+            <li class="border-l-4 border-yellow-400 pl-4 py-2">
+              <p class="font-semibold">Mahomes finds Kelce for 37-yard touchdown</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Q2 - 4:23 remaining</p>
+            </li>
+            <li class="border-l-4 border-yellow-400 pl-4 py-2">
+              <p class="font-semibold">Allen connects with Diggs on crucial 3rd down conversion</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Q3 - 8:12 remaining</p>
+            </li>
+            <li class="border-l-4 border-yellow-400 pl-4 py-2">
+              <p class="font-semibold">Edwards-Helaire breaks free for 22-yard touchdown run</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Q3 - 2:45 remaining</p>
+            </li>
+            <li class="border-l-4 border-yellow-400 pl-4 py-2">
+              <p class="font-semibold">Bills defense forces crucial turnover in red zone</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Q4 - 9:37 remaining</p>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>

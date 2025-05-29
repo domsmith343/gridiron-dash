@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Game } from '../types/game';
+import styles from './GameCard.module.css';
+import { createTeamColorStyles } from '../utils/styleUtils';
 
 interface GameCardProps {
   game: Game;
 }
 
 export const GameCard: React.FC<GameCardProps> = ({ game }) => {
+  const [homeImgError, setHomeImgError] = useState(false);
+  const [awayImgError, setAwayImgError] = useState(false);
+  const [teamColorClass, setTeamColorClass] = useState('');
+  
+  useEffect(() => {
+    // Create dynamic team color classes
+    const colorClass = createTeamColorStyles(
+      game.homeTeam.primaryColor,
+      game.awayTeam.primaryColor
+    );
+    setTeamColorClass(colorClass);
+  }, [game.homeTeam.primaryColor, game.awayTeam.primaryColor]);
   const {
     homeTeam,
     awayTeam,
@@ -18,59 +32,72 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
     weather
   } = game;
 
-  const getStatusColor = (status: string) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case 'LIVE':
-        return 'text-red-500';
+        return styles.statusLive;
       case 'FINAL':
-        return 'text-gray-500';
+        return styles.statusFinal;
       case 'UPCOMING':
-        return 'text-blue-500';
+        return styles.statusUpcoming;
       case 'POSTPONED':
-        return 'text-yellow-500';
+        return styles.statusPostponed;
       default:
-        return 'text-gray-500';
+        return styles.statusFinal;
     }
+  };
+
+  const handleGameClick = () => {
+    // Navigate to the game detail page
+    window.location.href = `/game/${game.id}`;
   };
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition-shadow"
-      style={{
-        borderTop: `4px solid ${homeTeam.primaryColor}`,
-        borderBottom: `4px solid ${awayTeam.primaryColor}`
-      }}
+      className={`${styles.gameCard} ${teamColorClass} cursor-pointer hover:shadow-lg transition-shadow duration-300`}
+      aria-label={`Game: ${homeTeam.name} vs ${awayTeam.name}`}
+      role="article"
+      onClick={handleGameClick}
+      onKeyDown={(e) => e.key === 'Enter' && handleGameClick()}
+      tabIndex={0}
     >
       <div className="flex justify-between items-center mb-2">
-        <span className={`text-sm font-medium ${getStatusColor(status)}`}>
+        <span className={`text-sm font-medium ${getStatusClass(status)}`} aria-label={`Game status: ${status}`}>
           {status}
         </span>
-        {time && <span className="text-sm text-gray-500">{quarter} {time}</span>}
+        {time && (
+          <span className="text-sm text-gray-500" aria-label={`Game time: ${quarter} ${time}`}>
+            {quarter} {time}
+          </span>
+        )}
       </div>
       
       <div className="space-y-4">
         {/* Home Team */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            {homeTeam.logo && (
+            {!homeImgError && (homeTeam.logoUrl || homeTeam.logo) ? (
               <img 
-                src={homeTeam.logo} 
+                src={homeTeam.logoUrl || homeTeam.logo as string} 
                 alt={`${homeTeam.name} logo`}
-                className="w-8 h-8 object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = `https://ui-avatars.com/api/?name=${homeTeam.abbreviation}&background=${homeTeam.primaryColor?.replace('#', '')}&color=fff`;
-                }}
+                className={styles.teamLogo}
+                onError={() => setHomeImgError(true)}
+                loading="lazy"
               />
+            ) : (
+              <div 
+                className={`${styles.teamAbbreviation} home-team-color`}
+              >
+                {homeTeam.abbreviation}
+              </div>
             )}
             <div>
-              <span className="font-medium text-gray-900 dark:text-white">{homeTeam.name}</span>
-              <span className="text-xs text-gray-500 block">({homeTeam.city})</span>
+              <span className={styles.teamName}>{homeTeam.name}</span>
+              <span className={styles.teamCity}>({homeTeam.city})</span>
             </div>
           </div>
           <span 
-            className="font-bold text-2xl"
-            style={{ color: homeTeam.primaryColor }}
+            className={`${styles.score} home-team-color`}
           >
             {homeScore}
           </span>
@@ -79,25 +106,28 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
         {/* Away Team */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            {awayTeam.logo && (
+            {!awayImgError && (awayTeam.logoUrl || awayTeam.logo) ? (
               <img 
-                src={awayTeam.logo} 
+                src={awayTeam.logoUrl || awayTeam.logo as string} 
                 alt={`${awayTeam.name} logo`}
-                className="w-8 h-8 object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = `https://ui-avatars.com/api/?name=${awayTeam.abbreviation}&background=${awayTeam.primaryColor?.replace('#', '')}&color=fff`;
-                }}
+                className={styles.teamLogo}
+                onError={() => setAwayImgError(true)}
+                loading="lazy"
               />
+            ) : (
+              <div 
+                className={`${styles.teamAbbreviation} away-team-color`}
+              >
+                {awayTeam.abbreviation}
+              </div>
             )}
             <div>
-              <span className="font-medium text-gray-900 dark:text-white">{awayTeam.name}</span>
-              <span className="text-xs text-gray-500 block">({awayTeam.city})</span>
+              <span className={styles.teamName}>{awayTeam.name}</span>
+              <span className={styles.teamCity}>({awayTeam.city})</span>
             </div>
           </div>
           <span 
-            className="font-bold text-2xl"
-            style={{ color: awayTeam.primaryColor }}
+            className={`${styles.score} away-team-color`}
           >
             {awayScore}
           </span>
@@ -105,11 +135,21 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
       </div>
 
       {venue && (
-        <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-500">{venue}</p>
+        <div className={styles.venueInfo}>
+          <p>
+            <span className="sr-only">Venue: </span>
+            {venue}
+          </p>
           {weather && (
-            <p className="text-sm text-gray-500">
-              {weather.temperature}°F, {weather.condition}, Wind: {weather.windSpeed} mph
+            <p>
+              <span className="sr-only">Weather conditions: </span>
+              <span className={styles.weatherInfo}>
+                <span>{weather.temperature}°F</span>
+                <span className={styles.weatherDivider}>•</span>
+                <span>{weather.condition}</span>
+                <span className={styles.weatherDivider}>•</span>
+                <span>Wind: {weather.windSpeed} mph</span>
+              </span>
             </p>
           )}
         </div>

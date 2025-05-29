@@ -1,56 +1,481 @@
 ---
 import DashboardLayout from '../layouts/DashboardLayout.astro';
+import GamesSection from '../components/GamesSection';
 ---
 
 <DashboardLayout>
-  <div class="dashboard-content">
-    <h2>Welcome to Gridiron Dash</h2>
-    <p>Your ultimate football statistics dashboard</p>
+  <div class="dashboard-overview">
+    <div class="welcome-section">
+      <h2>Welcome to Gridiron Dash</h2>
+      <p>Your ultimate NFL statistics dashboard for real-time game tracking and analysis</p>
+    </div>
     
     <div class="stats-grid">
-      <div class="stat-box">
-        <h3>Today's Games</h3>
-        <div class="stat-value">8</div>
+      <div class="stat-card">
+        <div class="stat-icon">🏈</div>
+        <div class="stat-content">
+          <h3>Today's Games</h3>
+          <div class="stat-value">8</div>
+          <div class="stat-trend positive">+2 from yesterday</div>
+        </div>
       </div>
-      <div class="stat-box">
-        <h3>Live Updates</h3>
-        <div class="stat-value">24</div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">📊</div>
+        <div class="stat-content">
+          <h3>Live Updates</h3>
+          <div class="stat-value">24</div>
+          <div class="stat-trend positive">+5 from last hour</div>
+        </div>
       </div>
-      <div class="stat-box">
-        <h3>Active Users</h3>
-        <div class="stat-value">156</div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>Active Users</h3>
+          <div class="stat-value">156</div>
+          <div class="stat-trend negative">-12 from peak</div>
+        </div>
       </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-content">
+          <h3>Notifications</h3>
+          <div class="stat-value">3</div>
+          <div class="stat-trend neutral">No change</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="dashboard-content">
+    <div class="content-grid">
+      <section class="games-section">
+        <div class="section-header">
+          <h2>Live Games</h2>
+          <div class="section-actions">
+            <button class="refresh-button">Refresh</button>
+            <div class="view-selector">
+              <button class="view-button active">Card</button>
+              <button class="view-button">List</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="games-container">
+          <GamesSection client:load />
+        </div>
+      </section>
+      
+      <aside class="sidebar-widgets">
+        <section class="widget">
+          <h3>Top Performers</h3>
+          <ul class="performer-list">
+            <li class="performer-item">
+              <img src="https://ui-avatars.com/api/?name=PM&background=E31837&color=fff" alt="Patrick Mahomes" class="performer-avatar" />
+              <div class="performer-info">
+                <span class="performer-name">Patrick Mahomes</span>
+                <span class="performer-stats">325 YDS, 3 TD</span>
+              </div>
+            </li>
+            <li class="performer-item">
+              <img src="https://ui-avatars.com/api/?name=CM&background=AA0000&color=fff" alt="Christian McCaffrey" class="performer-avatar" />
+              <div class="performer-info">
+                <span class="performer-name">Christian McCaffrey</span>
+                <span class="performer-stats">142 YDS, 2 TD</span>
+              </div>
+            </li>
+            <li class="performer-item">
+              <img src="https://ui-avatars.com/api/?name=JJ&background=00338D&color=fff" alt="Josh Allen" class="performer-avatar" />
+              <div class="performer-info">
+                <span class="performer-name">Josh Allen</span>
+                <span class="performer-stats">298 YDS, 2 TD</span>
+              </div>
+            </li>
+          </ul>
+        </section>
+        
+        <section class="widget">
+          <h3>Latest News</h3>
+          <ul class="news-list">
+            <li class="news-item">
+              <span class="news-time">2h ago</span>
+              <p class="news-headline">Chiefs clinch playoff spot with last-minute win</p>
+            </li>
+            <li class="news-item">
+              <span class="news-time">4h ago</span>
+              <p class="news-headline">49ers defense dominates in shutout victory</p>
+            </li>
+            <li class="news-item">
+              <span class="news-time">6h ago</span>
+              <p class="news-headline">Eagles announce starting QB for next week</p>
+            </li>
+          </ul>
+          <a href="#" class="view-all">View all news</a>
+        </section>
+      </aside>
     </div>
   </div>
 </DashboardLayout>
 
 <style>
-  .dashboard-content {
-    padding: 2rem;
+  .dashboard-overview {
+    padding: 0 0 1.5rem 0;
   }
-
+  
+  .welcome-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: #1e293b;
+  }
+  
+  :global(.dark) .welcome-section h2 {
+    color: #f1f5f9;
+  }
+  
+  .welcome-section p {
+    color: #64748b;
+    margin: 0;
+  }
+  
+  :global(.dark) .welcome-section p {
+    color: #94a3b8;
+  }
+  
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
   }
-
-  .stat-box {
-    background: linear-gradient(135deg, #3498db, #2c3e50);
-    color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    text-align: center;
+  
+  .stat-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-
-  .stat-box h3 {
-    font-size: 1.2rem;
+  
+  :global(.dark) .stat-card {
+    background-color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  :global(.dark) .stat-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .stat-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    color: #3b82f6;
+  }
+  
+  .stat-content {
+    flex: 1;
+  }
+  
+  .stat-card h3 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+    color: #64748b;
+  }
+  
+  :global(.dark) .stat-card h3 {
+    color: #94a3b8;
+  }
+  
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+  }
+  
+  :global(.dark) .stat-value {
+    color: #f1f5f9;
+  }
+  
+  .stat-trend {
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .stat-trend.positive {
+    color: #10b981;
+  }
+  
+  .stat-trend.negative {
+    color: #ef4444;
+  }
+  
+  .stat-trend.neutral {
+    color: #64748b;
+  }
+  
+  .dashboard-content {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  :global(.dark) .dashboard-content {
+    border-top-color: #334155;
+  }
+  
+  .content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
   }
-
-  .stat-value {
-    font-size: 2.5rem;
-    font-weight: bold;
+  
+  .section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
   }
-</style> 
+  
+  :global(.dark) .section-header h2 {
+    color: #f1f5f9;
+  }
+  
+  .section-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .refresh-button {
+    background-color: #f1f5f9;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #334155;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  :global(.dark) .refresh-button {
+    background-color: #334155;
+    color: #e2e8f0;
+  }
+  
+  .refresh-button:hover {
+    background-color: #e2e8f0;
+  }
+  
+  :global(.dark) .refresh-button:hover {
+    background-color: #475569;
+  }
+  
+  .view-selector {
+    display: flex;
+    background-color: #f1f5f9;
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+  
+  :global(.dark) .view-selector {
+    background-color: #334155;
+  }
+  
+  .view-button {
+    background: none;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #64748b;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  :global(.dark) .view-button {
+    color: #94a3b8;
+  }
+  
+  .view-button.active {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  :global(.dark) .view-button.active {
+    background-color: #2563eb;
+  }
+  
+  .games-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  
+  .sidebar-widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .widget {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  :global(.dark) .widget {
+    background-color: #1e293b;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .widget h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+  }
+  
+  :global(.dark) .widget h3 {
+    color: #f1f5f9;
+  }
+  
+  .performer-list, .news-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .performer-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  :global(.dark) .performer-item {
+    border-bottom-color: #334155;
+  }
+  
+  .performer-item:last-child {
+    border-bottom: none;
+  }
+  
+  .performer-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 9999px;
+    margin-right: 0.75rem;
+  }
+  
+  .performer-info {
+    flex: 1;
+  }
+  
+  .performer-name {
+    display: block;
+    font-weight: 500;
+    color: #1e293b;
+  }
+  
+  :global(.dark) .performer-name {
+    color: #f1f5f9;
+  }
+  
+  .performer-stats {
+    display: block;
+    font-size: 0.875rem;
+    color: #64748b;
+  }
+  
+  :global(.dark) .performer-stats {
+    color: #94a3b8;
+  }
+  
+  .news-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  :global(.dark) .news-item {
+    border-bottom-color: #334155;
+  }
+  
+  .news-item:last-child {
+    border-bottom: none;
+  }
+  
+  .news-time {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  
+  :global(.dark) .news-time {
+    color: #94a3b8;
+  }
+  
+  .news-headline {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.875rem;
+    color: #1e293b;
+  }
+  
+  :global(.dark) .news-headline {
+    color: #f1f5f9;
+  }
+  
+  .view-all {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #3b82f6;
+    text-decoration: none;
+  }
+  
+  .view-all:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 1024px) {
+    .content-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .sidebar-widgets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .sidebar-widgets {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,96 @@
+.gameCard {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-top: 4px solid var(--home-team-color, #333);
+  border-bottom: 4px solid var(--away-team-color, #333);
+}
+
+.gameCard:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+:global(.dark) .gameCard {
+  background-color: #1e293b;
+}
+
+.teamLogo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.teamAbbreviation {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  background-color: var(--team-color, #333);
+}
+
+.score {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--team-color, #333);
+}
+
+.teamName {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+:global(.dark) .teamName {
+  color: #f8fafc;
+}
+
+.teamCity {
+  font-size: 0.75rem;
+  color: #64748b;
+  display: block;
+}
+
+.venueInfo {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+:global(.dark) .venueInfo {
+  border-top-color: #334155;
+}
+
+.weatherInfo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.weatherDivider {
+  margin: 0 0.25rem;
+}
+
+.statusLive {
+  color: #ef4444;
+}
+
+.statusFinal {
+  color: #6b7280;
+}
+
+.statusUpcoming {
+  color: #3b82f6;
+}
+
+.statusPostponed {
+  color: #eab308;
+}
