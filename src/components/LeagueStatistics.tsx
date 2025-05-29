@@ -161,7 +161,7 @@ export const LeagueStatistics: React.FC<LeagueStatisticsProps> = ({
         <button 
           className={`${styles.tab} ${activeTab === 'offense' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('offense')}
-          aria-selected={activeTab === 'offense' ? 'true' : 'false'}
+          aria-selected="true"
           role="tab"
           id="tab-offense"
           aria-controls="panel-offense"
@@ -172,7 +172,7 @@ export const LeagueStatistics: React.FC<LeagueStatisticsProps> = ({
         <button 
           className={`${styles.tab} ${activeTab === 'defense' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('defense')}
-          aria-selected={activeTab === 'defense' ? 'true' : 'false'}
+          aria-selected="false"
           role="tab"
           id="tab-defense"
           aria-controls="panel-defense"
@@ -183,7 +183,7 @@ export const LeagueStatistics: React.FC<LeagueStatisticsProps> = ({
         <button 
           className={`${styles.tab} ${activeTab === 'passing' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('passing')}
-          aria-selected={activeTab === 'passing' ? 'true' : 'false'}
+          aria-selected="false"
           role="tab"
           id="tab-passing"
           aria-controls="panel-passing"
@@ -194,7 +194,7 @@ export const LeagueStatistics: React.FC<LeagueStatisticsProps> = ({
         <button 
           className={`${styles.tab} ${activeTab === 'rushing' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('rushing')}
-          aria-selected={activeTab === 'rushing' ? 'true' : 'false'}
+          aria-selected="false"
           role="tab"
           id="tab-rushing"
           aria-controls="panel-rushing"
@@ -205,7 +205,7 @@ export const LeagueStatistics: React.FC<LeagueStatisticsProps> = ({
         <button 
           className={`${styles.tab} ${activeTab === 'receiving' ? styles.activeTab : ''}`}
           onClick={() => setActiveTab('receiving')}
-          aria-selected={activeTab === 'receiving' ? 'true' : 'false'}
+          aria-selected="false"
           role="tab"
           id="tab-receiving"
           aria-controls="panel-receiving"

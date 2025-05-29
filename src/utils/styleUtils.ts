@@ -38,3 +38,37 @@ export const createTeamColorStyles = (
   
   return className;
 };
+
+/**
+ * Utility function to apply team colors without using inline styles
+ * This function dynamically creates CSS classes for team colors
+ */
+export const applyTeamColors = (homeColor: string | undefined, awayColor: string | undefined): void => {
+  const homeTeamColor = homeColor || '#333';
+  const awayTeamColor = awayColor || '#333';
+  const styleId = 'team-colors-global';
+  
+  // Only add the styles once
+  if (typeof document !== 'undefined' && !document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.innerHTML = `
+      :root {
+        --home-team-color: ${homeTeamColor};
+        --away-team-color: ${awayTeamColor};
+      }
+    `;
+    document.head.appendChild(style);
+  } else if (typeof document !== 'undefined') {
+    // Update existing style
+    const existingStyle = document.getElementById(styleId);
+    if (existingStyle) {
+      existingStyle.innerHTML = `
+        :root {
+          --home-team-color: ${homeTeamColor};
+          --away-team-color: ${awayTeamColor};
+        }
+      `;
+    }
+  }
+};

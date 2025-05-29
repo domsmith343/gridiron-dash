@@ -3,6 +3,7 @@ import type { Game, GameStats } from '../types/game';
 import { websocketService } from '../services/websocket';
 import styles from './GameDetail.module.css';
 import ConnectionStatus from './ConnectionStatus';
+import { applyTeamColors } from '../utils/styleUtils';
 
 interface GameDetailProps {
   gameId: string;
@@ -132,6 +133,12 @@ export const GameDetail: React.FC<GameDetailProps> = ({
     };
   }, [gameId, initialGame]);
   
+  useEffect(() => {
+    if (game) {
+      applyTeamColors(game.homeTeam.primaryColor, game.awayTeam.primaryColor);
+    }
+  }, [game]);
+  
   if (loading) {
     return (
       <div className={styles.loadingContainer}>
@@ -207,10 +214,7 @@ export const GameDetail: React.FC<GameDetailProps> = ({
               <span className={styles.teamName}>{game.homeTeam.name}</span>
               <span className={styles.teamRecord}>(10-6)</span>
             </div>
-            <div 
-              className={styles.teamScore + ' ' + styles.homeTeamColor}
-              style={{'--home-team-color': game.homeTeam.primaryColor} as React.CSSProperties}
-            >
+            <div className={`${styles.teamScore} ${styles.homeTeamColor}`}>
               {game.homeScore}
             </div>
           </div>
@@ -219,10 +223,6 @@ export const GameDetail: React.FC<GameDetailProps> = ({
             {isLive && game.possession && (
               <div 
                 className={`${styles.possessionIndicator} ${game.possession === game.homeTeam.id ? styles.possessionIndicatorHome : styles.possessionIndicatorAway}`}
-                style={{
-                  '--home-team-color': game.homeTeam.primaryColor,
-                  '--away-team-color': game.awayTeam.primaryColor
-                } as React.CSSProperties}
               >
                 {game.redZone && <span className={styles.redZone}>RZ</span>}
               </div>
@@ -245,10 +245,7 @@ export const GameDetail: React.FC<GameDetailProps> = ({
               <span className={styles.teamName}>{game.awayTeam.name}</span>
               <span className={styles.teamRecord}>(8-8)</span>
             </div>
-            <div 
-              className={styles.teamScore + ' ' + styles.awayTeamColor}
-              style={{'--away-team-color': game.awayTeam.primaryColor} as React.CSSProperties}
-            >
+            <div className={`${styles.teamScore} ${styles.awayTeamColor}`}>
               {game.awayScore}
             </div>
           </div>
