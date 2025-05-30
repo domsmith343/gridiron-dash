@@ -1,0 +1,465 @@
+import React, { useState, useEffect } from 'react';
+import { teams } from '../services/mockData';
+import DetailedPlayerStats from './DetailedPlayerStats';
+import { websocketService } from '../services/websocket';
+
+// Types for fantasy football
+interface FantasyPlayer {
+  id: string;
+  name: string;
+  position: 'QB' | 'RB' | 'WR' | 'TE' | 'K' | 'DEF';
+  team: string;
+  teamId: string;
+  projectedPoints: number;
+  actualPoints: number;
+  status: 'active' | 'injured' | 'questionable' | 'out';
+  stats: {
+    passingYards?: number;
+    passingTDs?: number;
+    interceptions?: number;
+    rushingYards?: number;
+    rushingTDs?: number;
+    receivingYards?: number;
+    receivingTDs?: number;
+    receptions?: number;
+    fieldGoals?: number;
+    extraPoints?: number;
+  };
+  avatarUrl?: string;
+}
+
+interface FantasyTeam {
+  id: string;
+  name: string;
+  owner: string;
+  players: FantasyPlayer[];
+  projectedPoints: number;
+  actualPoints: number;
+}
+
+interface FantasyFootballProps {
+  className?: string;
+}
+
+const FantasyFootball: React.FC<FantasyFootballProps> = ({ className = '' }) => {
+  const [activeTab, setActiveTab] = useState<'myTeam' | 'topPlayers' | 'matchup'>('myTeam');
+  const [selectedPlayer, setSelectedPlayer] = useState<FantasyPlayer | null>(null);
+  const [myTeam, setMyTeam] = useState<FantasyTeam | null>(null);
+  const [topPlayers, setTopPlayers] = useState<FantasyPlayer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedPosition, setSelectedPosition] = useState<string>('ALL');
+
+  // Generate mock fantasy players
+  const generateMockPlayers = (): FantasyPlayer[] => {
+    const positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const;
+    const statuses = ['active', 'injured', 'questionable', 'out'] as const;
+    
+    const players: FantasyPlayer[] = [
+      {
+        id: 'p1',
+        name: 'Patrick Mahomes',
+        position: 'QB',
+        team: 'Kansas City Chiefs',
+        teamId: 'KC',
+        projectedPoints: 22.5,
+        actualPoints: 24.3,
+        status: 'active',
+        stats: {
+          passingYards: 328,
+          passingTDs: 3,
+          interceptions: 1,
+          rushingYards: 15,
+          rushingTDs: 0
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=PM&background=E31837&color=fff'
+      },
+      {
+        id: 'p2',
+        name: 'Christian McCaffrey',
+        position: 'RB',
+        team: 'San Francisco 49ers',
+        teamId: 'SF',
+        projectedPoints: 18.7,
+        actualPoints: 21.2,
+        status: 'active',
+        stats: {
+          rushingYards: 102,
+          rushingTDs: 1,
+          receptions: 6,
+          receivingYards: 52,
+          receivingTDs: 1
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=CM&background=AA0000&color=fff'
+      },
+      {
+        id: 'p3',
+        name: 'Tyreek Hill',
+        position: 'WR',
+        team: 'Miami Dolphins',
+        teamId: 'MIA',
+        projectedPoints: 17.3,
+        actualPoints: 19.8,
+        status: 'active',
+        stats: {
+          receptions: 8,
+          receivingYards: 138,
+          receivingTDs: 1
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=TH&background=008E97&color=fff'
+      },
+      {
+        id: 'p4',
+        name: 'Travis Kelce',
+        position: 'TE',
+        team: 'Kansas City Chiefs',
+        teamId: 'KC',
+        projectedPoints: 14.2,
+        actualPoints: 12.7,
+        status: 'active',
+        stats: {
+          receptions: 7,
+          receivingYards: 87,
+          receivingTDs: 0
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=TK&background=E31837&color=fff'
+      },
+      {
+        id: 'p5',
+        name: 'Justin Tucker',
+        position: 'K',
+        team: 'Baltimore Ravens',
+        teamId: 'BAL',
+        projectedPoints: 8.5,
+        actualPoints: 9.0,
+        status: 'active',
+        stats: {
+          fieldGoals: 3,
+          extraPoints: 3
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=JT&background=241773&color=fff'
+      },
+      {
+        id: 'p6',
+        name: 'San Francisco',
+        position: 'DEF',
+        team: 'San Francisco 49ers',
+        teamId: 'SF',
+        projectedPoints: 7.8,
+        actualPoints: 12.0,
+        status: 'active',
+        stats: {},
+        avatarUrl: 'https://ui-avatars.com/api/?name=SF&background=AA0000&color=fff'
+      },
+      {
+        id: 'p7',
+        name: 'Josh Allen',
+        position: 'QB',
+        team: 'Buffalo Bills',
+        teamId: 'BUF',
+        projectedPoints: 21.3,
+        actualPoints: 26.7,
+        status: 'active',
+        stats: {
+          passingYards: 287,
+          passingTDs: 2,
+          interceptions: 0,
+          rushingYards: 56,
+          rushingTDs: 1
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=JA&background=00338D&color=fff'
+      },
+      {
+        id: 'p8',
+        name: 'Jalen Hurts',
+        position: 'QB',
+        team: 'Philadelphia Eagles',
+        teamId: 'PHI',
+        projectedPoints: 20.5,
+        actualPoints: 22.1,
+        status: 'active',
+        stats: {
+          passingYards: 243,
+          passingTDs: 1,
+          interceptions: 0,
+          rushingYards: 45,
+          rushingTDs: 2
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=JH&background=004C54&color=fff'
+      },
+      {
+        id: 'p9',
+        name: 'A.J. Brown',
+        position: 'WR',
+        team: 'Philadelphia Eagles',
+        teamId: 'PHI',
+        projectedPoints: 15.8,
+        actualPoints: 17.2,
+        status: 'active',
+        stats: {
+          receptions: 7,
+          receivingYards: 112,
+          receivingTDs: 1
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=AB&background=004C54&color=fff'
+      },
+      {
+        id: 'p10',
+        name: 'Stefon Diggs',
+        position: 'WR',
+        team: 'Buffalo Bills',
+        teamId: 'BUF',
+        projectedPoints: 14.5,
+        actualPoints: 16.3,
+        status: 'active',
+        stats: {
+          receptions: 8,
+          receivingYards: 103,
+          receivingTDs: 1
+        },
+        avatarUrl: 'https://ui-avatars.com/api/?name=SD&background=00338D&color=fff'
+      }
+    ];
+    
+    // Generate additional players to have a good selection
+    for (let i = 11; i <= 50; i++) {
+      const teamIndex = i % teams.length;
+      const positionIndex = i % positions.length;
+      const statusIndex = Math.floor(Math.random() * statuses.length);
+      
+      const position = positions[positionIndex];
+      const team = teams[teamIndex];
+      
+      // Generate random stats based on position
+      const stats: FantasyPlayer['stats'] = {};
+      
+      if (position === 'QB') {
+        stats.passingYards = 150 + Math.floor(Math.random() * 250);
+        stats.passingTDs = Math.floor(Math.random() * 4);
+        stats.interceptions = Math.floor(Math.random() * 3);
+        stats.rushingYards = Math.floor(Math.random() * 40);
+        stats.rushingTDs = Math.random() > 0.8 ? 1 : 0;
+      } else if (position === 'RB') {
+        stats.rushingYards = 40 + Math.floor(Math.random() * 100);
+        stats.rushingTDs = Math.random() > 0.7 ? 1 : 0;
+        stats.receptions = Math.floor(Math.random() * 5);
+        stats.receivingYards = Math.floor(Math.random() * 50);
+        stats.receivingTDs = Math.random() > 0.9 ? 1 : 0;
+      } else if (position === 'WR' || position === 'TE') {
+        stats.receptions = Math.floor(Math.random() * 8);
+        stats.receivingYards = 20 + Math.floor(Math.random() * 100);
+        stats.receivingTDs = Math.random() > 0.8 ? 1 : 0;
+      } else if (position === 'K') {
+        stats.fieldGoals = Math.floor(Math.random() * 4);
+        stats.extraPoints = Math.floor(Math.random() * 5);
+      }
+      
+      // Calculate fantasy points based on stats
+      let projectedPoints = 0;
+      if (stats.passingYards) projectedPoints += stats.passingYards * 0.04;
+      if (stats.passingTDs) projectedPoints += stats.passingTDs * 4;
+      if (stats.interceptions) projectedPoints -= stats.interceptions;
+      if (stats.rushingYards) projectedPoints += stats.rushingYards * 0.1;
+      if (stats.rushingTDs) projectedPoints += stats.rushingTDs * 6;
+      if (stats.receptions) projectedPoints += stats.receptions * 0.5;
+      if (stats.receivingYards) projectedPoints += stats.receivingYards * 0.1;
+      if (stats.receivingTDs) projectedPoints += stats.receivingTDs * 6;
+      if (stats.fieldGoals) projectedPoints += stats.fieldGoals * 3;
+      if (stats.extraPoints) projectedPoints += stats.extraPoints;
+      
+      // Add some randomness to actual points
+      const actualPoints = projectedPoints * (0.8 + Math.random() * 0.4);
+      
+      players.push({
+        id: `p${i}`,
+        name: `Player ${i}`,
+        position,
+        team: `${team.city} ${team.name}`,
+        teamId: team.id,
+        projectedPoints: parseFloat(projectedPoints.toFixed(1)),
+        actualPoints: parseFloat(actualPoints.toFixed(1)),
+        status: statuses[statusIndex],
+        stats,
+        avatarUrl: `https://ui-avatars.com/api/?name=P${i}&background=${team.primaryColor ? team.primaryColor.replace('#', '') : '333333'}&color=fff`
+      });
+    }
+    
+    return players;
+  };
+
+  // Create a mock fantasy team
+  const createMockTeam = (players: FantasyPlayer[]): FantasyTeam => {
+    // Select players for the team
+    const teamPlayers = [
+      players.find(p => p.id === 'p1')!, // QB
+      players.find(p => p.id === 'p2')!, // RB1
+      players.find(p => p.position === 'RB' && p.id !== 'p2')!, // RB2
+      players.find(p => p.id === 'p3')!, // WR1
+      players.find(p => p.id === 'p9')!, // WR2
+      players.find(p => p.position === 'WR' && p.id !== 'p3' && p.id !== 'p9')!, // WR3
+      players.find(p => p.id === 'p4')!, // TE
+      players.find(p => p.id === 'p5')!, // K
+      players.find(p => p.id === 'p6')! // DEF
+    ];
+    
+    // Calculate total points
+    const projectedPoints = teamPlayers.reduce((sum, player) => sum + player.projectedPoints, 0);
+    const actualPoints = teamPlayers.reduce((sum, player) => sum + player.actualPoints, 0);
+    
+    return {
+      id: 'team1',
+      name: 'Gridiron Champions',
+      owner: 'You',
+      players: teamPlayers,
+      projectedPoints: parseFloat(projectedPoints.toFixed(1)),
+      actualPoints: parseFloat(actualPoints.toFixed(1))
+    };
+  };
+
+  // Initialize fantasy data
+  useEffect(() => {
+    setLoading(true);
+    
+    // In a real app, we would fetch from an API
+    // For now, we'll generate mock data
+    setTimeout(() => {
+      const players = generateMockPlayers();
+      const team = createMockTeam(players);
+      
+      setTopPlayers(players.sort((a, b) => b.actualPoints - a.actualPoints));
+      setMyTeam(team);
+      setLoading(false);
+    }, 1000);
+    
+    // Subscribe to stat updates
+    const unsubscribeStatUpdates = websocketService.subscribeToStatUpdates((stats) => {
+      // In a real app, we would update fantasy points based on the websocket data
+      console.log('Fantasy stat update received:', stats);
+      // For now, we'll just use our mock data
+    });
+    
+    return () => {
+  return (
+    <div key={player.id} className="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-2 hover:shadow-md transition-shadow">
+      <div className="flex-shrink-0 mr-3">
+        <img
+          src={player.avatarUrl || `https://ui-avatars.com/api/?name=${player.name.split(' ').map(n => n[0]).join('')}&background=random`}
+          alt={player.name}
+          className="w-10 h-10 rounded-full"
+        />
+      </div>
+      <div className="flex-1">
+        <div className="flex justify-between">
+          <div>
+            <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200">{player.name}</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {player.position} • {player.team}
+              {player.status !== 'active' && (
+                <span className={`ml-2 ${
+                  player.status === 'injured' || player.status === 'out' 
+                    ? 'text-red-500' 
+                    : 'text-yellow-500'
+                }`}>
+                  {player.status.toUpperCase()}
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{player.actualPoints} pts</span>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Proj: {player.projectedPoints}</p>
+          </div>
+        </div>
+      </div>
+      {showAddButton && (
+        <button 
+          className="ml-2 p-1 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
+          title="Add player to team"
+          aria-label="Add player to team"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+        </button>
+      )}
+      <button 
+        className="ml-2 p-1 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
+        title="View player details"
+        aria-label="View player details"
+        onClick={() => setSelectedPlayer(player)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+          <path fillRule="evenodd" d="M.458 10C1.732 5.943 7.908 3 13.867 3h3.039c9.196 0 16.357 7.46 16.363 16.134C30.42 23.304 25.982 25 19.665 25a2.318 2.318 0 01-2.268-1.654 2.318 2.318 0 01.636-2.207 2.318 2.318 0 01.803 1.787 3.803 3.803 0 01-1.662.977A3.803 3.803 0 0119.665 22c-3.417 0-6.358-2.877-6.358-6.358 0-.448.084-.86.255-1.27 0 0-.21.15-.354.35 0 0 .21.15.354.35.18.18.354.35.354.51 0 .21-.14.41-.354.51-.21.18-.354.35-.354.51 0 .16.14.31.354.51z" clipRule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  );
+};
+
+// ... (rest of the code remains the same)
+
+// Render the My Team tab
+const renderMyTeamTab = () => {
+  if (!myTeam) return <div className="text-center py-8">Loading your team...</div>;
+  
+  return (
+    <div>
+      {selectedPlayer ? (
+        <div className="mb-4">
+          <button 
+            onClick={() => setSelectedPlayer(null)}
+            className="mb-4 flex items-center text-sm text-primary-500 hover:text-primary-600 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to My Team
+          </button>
+          
+          <DetailedPlayerStats player={selectedPlayer} />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+            <h3 className="text-lg font-semibold mb-4">My Team</h3>
+            <div className="space-y-3">
+              {myTeam.players.map((player, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded cursor-pointer" 
+                  onClick={() => setSelectedPlayer(player)}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 mr-3 flex items-center justify-center overflow-hidden">
+                    <img 
+                      src={player.avatarUrl || `https://ui-avatars.com/api/?name=${player.name.split(' ').map(n => n[0]).join('')}&background=random`} 
+                      alt={player.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between">
+                      <span className="font-medium">{player.name}</span>
+                      <span className="text-sm">{player.fantasyPoints} pts</span>
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                      <span>{player.position} • {player.team}</span>
+                      <span>Proj: {player.projectedPoints}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <h4 className="font-semibold mb-2">Your Lineup</h4>
+              {myTeam.players.map(player => renderPlayerCard(player))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default FantasyFootball;

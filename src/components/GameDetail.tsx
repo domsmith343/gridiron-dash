@@ -4,6 +4,9 @@ import { websocketService } from '../services/websocket';
 import styles from './GameDetail.module.css';
 import ConnectionStatus from './ConnectionStatus';
 import { applyTeamColors } from '../utils/styleUtils';
+import FavoritesWrapper from './FavoritesWrapper';
+import FavoriteButton from './FavoriteButton';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface GameDetailProps {
   gameId: string;
@@ -11,11 +14,13 @@ interface GameDetailProps {
   onClose?: () => void;
 }
 
-export const GameDetail: React.FC<GameDetailProps> = ({ 
+// Inner component that uses the favorites context
+const GameDetailContent: React.FC<GameDetailProps> = ({ 
   gameId, 
   initialGame,
   onClose
 }) => {
+  const { isFavorite } = useFavorites();
   const [game, setGame] = useState<Game | null>(initialGame || null);
   const [stats, setStats] = useState<GameStats | null>(null);
   const [loading, setLoading] = useState<boolean>(!initialGame);
@@ -211,7 +216,10 @@ export const GameDetail: React.FC<GameDetailProps> = ({
               )}
             </div>
             <div className={styles.teamInfo}>
-              <span className={styles.teamName}>{game.homeTeam.name}</span>
+              <div className="flex items-center gap-2">
+                <span className={styles.teamName}>{game.homeTeam.name}</span>
+                <FavoriteButton teamId={game.homeTeam.id} />
+              </div>
               <span className={styles.teamRecord}>(10-6)</span>
             </div>
             <div className={`${styles.teamScore} ${styles.homeTeamColor}`}>
@@ -242,7 +250,10 @@ export const GameDetail: React.FC<GameDetailProps> = ({
               )}
             </div>
             <div className={styles.teamInfo}>
-              <span className={styles.teamName}>{game.awayTeam.name}</span>
+              <div className="flex items-center gap-2">
+                <span className={styles.teamName}>{game.awayTeam.name}</span>
+                <FavoriteButton teamId={game.awayTeam.id} />
+              </div>
               <span className={styles.teamRecord}>(8-8)</span>
             </div>
             <div className={`${styles.teamScore} ${styles.awayTeamColor}`}>
@@ -334,6 +345,15 @@ export const GameDetail: React.FC<GameDetailProps> = ({
         )}
       </div>
     </div>
+  );
+};
+
+// Wrapper component that provides the favorites context
+export const GameDetail: React.FC<GameDetailProps> = (props) => {
+  return (
+    <FavoritesWrapper>
+      <GameDetailContent {...props} />
+    </FavoritesWrapper>
   );
 };
 

@@ -1,0 +1,57 @@
+/* Team Comparison Chart Styles */
+.team-color-indicator {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  margin-right: 0.5rem;
+}
+
+.comparison-bar {
+  height: 100%;
+  transition: all 0.5s;
+}
+
+.comparison-bar-better {
+  background-color: #10B981; /* green-500 */
+}
+
+.comparison-bar-normal {
+  background-color: #3B82F6; /* blue-500 */
+}
+
+/* Player Stats Radar Chart Styles */
+.player-stats-radar-container {
+  width: 100%;
+  height: auto;
+}
+
+/* Detailed Player Stats Styles */
+.player-stat-trend {
+  height: 60px;
+}
+
+.player-stat-bar {
+  height: var(--bar-height);
+  transition: all 0.3s;
+}
+
+.team1-color-indicator,
+.team2-color-indicator {
+  background-color: var(--team-color);
+}
+
+.team1-bar,
+.team2-bar {
+  width: var(--bar-width);
+  background-color: var(--bar-color);
+}
+
+.team-avatar-bg {
+  background-color: var(--team-bg);
+}
+
+/* Fantasy Football Progress Bar */
+.fantasy-progress-bar {
+  height: 1rem;
+  transition: all 0.3s;
+}

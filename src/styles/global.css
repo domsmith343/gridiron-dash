@@ -1,3 +1,6 @@
+/*
+  NOTE: If your IDE shows warnings for @tailwind or @apply, these are safe to ignore as long as Tailwind CSS is set up correctly in your build process. These are PostCSS directives and do not affect the actual build or production output.
+*/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

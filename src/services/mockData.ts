@@ -6,7 +6,7 @@ export const teams: Team[] = [
     name: 'Chiefs',
     abbreviation: 'KC',
     city: 'Kansas City',
-    logo: '/images/teams/chiefs.png',
+    logoUrl: '/images/teams/chiefs.png',
     primaryColor: '#E31837',
     secondaryColor: '#FFB81C'
   },
@@ -15,7 +15,7 @@ export const teams: Team[] = [
     name: '49ers',
     abbreviation: 'SF',
     city: 'San Francisco',
-    logo: '/images/teams/49ers.png',
+    logoUrl: '/images/teams/49ers.png',
     primaryColor: '#AA0000',
     secondaryColor: '#B3995D'
   },
@@ -24,7 +24,7 @@ export const teams: Team[] = [
     name: 'Bills',
     abbreviation: 'BUF',
     city: 'Buffalo',
-    logo: '/images/teams/bills.png',
+    logoUrl: '/images/teams/bills.png',
     primaryColor: '#00338D',
     secondaryColor: '#C60C30'
   },
@@ -33,9 +33,18 @@ export const teams: Team[] = [
     name: 'Dolphins',
     abbreviation: 'MIA',
     city: 'Miami',
-    logo: '/images/teams/dolphins.png',
+    logoUrl: '/images/teams/dolphins.png',
     primaryColor: '#008E97',
     secondaryColor: '#FC4C02'
+  },
+  {
+    id: 'PHI',
+    name: 'Eagles',
+    abbreviation: 'PHI',
+    city: 'Philadelphia',
+    logoUrl: '/images/teams/eagles.png',
+    primaryColor: '#004C54',
+    secondaryColor: '#A5ACAF'
   }
 ];
 
@@ -74,5 +83,21 @@ export const mockGames: Game[] = [
     status: 'UPCOMING',
     startTime: '8:20 PM ET',
     venue: 'Levi\'s Stadium'
+  },
+  {
+    id: '4',
+    homeTeam: teams[4], // Philadelphia Eagles
+    awayTeam: teams[2], // Buffalo Bills
+    homeScore: 17,
+    awayScore: 14,
+    status: 'LIVE',
+    quarter: 'Q3',
+    time: '8:45',
+    venue: 'Lincoln Financial Field',
+    weather: {
+      temperature: 62,
+      condition: 'Clear',
+      windSpeed: 5
+    }
   }
 ]; 

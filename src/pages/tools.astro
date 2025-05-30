@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TeamComparisonTool from '../components/TeamComparisonTool';
+import FantasyFootball from '../components/FantasyFootball';
+import ConnectionStatus from '../components/ConnectionStatus';
+import NotificationCenter from '../components/NotificationCenter';
+import NotificationWrapper from '../components/NotificationWrapper';
+import ThemeToggle from '../components/ThemeToggle';
+import '../styles/global.css';
+---
+
+<Layout title="Gridiron Dash - Tools">
+	<main class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+		<div class="container mx-auto px-4 py-8">
+			<header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+				<div class="flex items-center gap-4">
+					<a href="/" class="text-primary-700 dark:text-primary-200 hover:underline flex items-center gap-2">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+						</svg>
+						Back to Dashboard
+					</a>
+					<h1 class="text-4xl font-extrabold text-primary-700 dark:text-primary-200 drop-shadow">
+						Tools
+					</h1>
+					<ConnectionStatus client:load />
+				</div>
+				<div class="flex items-center gap-4 mt-4 md:mt-0">
+					<NotificationWrapper client:load>
+						<NotificationCenter client:load />
+					</NotificationWrapper>
+					<ThemeToggle client:load className="ml-2" />
+				</div>
+			</header>
+			
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+				<!-- Team Comparison Tool Section -->
+				<section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
+					<NotificationWrapper client:load>
+						<TeamComparisonTool client:load />
+					</NotificationWrapper>
+				</section>
+
+				<!-- Fantasy Football Section -->
+				<section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
+					<NotificationWrapper client:load>
+						<FantasyFootball client:load />
+					</NotificationWrapper>
+				</section>
+			</div>
+		</div>
+	</main>
+</Layout>

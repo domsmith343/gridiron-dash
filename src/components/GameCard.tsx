@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import type { Game } from '../types/game';
 import styles from './GameCard.module.css';
 import { createTeamColorStyles } from '../utils/styleUtils';
+import FavoriteButton from './FavoriteButton';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface GameCardProps {
   game: Game;
@@ -11,6 +13,12 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
   const [homeImgError, setHomeImgError] = useState(false);
   const [awayImgError, setAwayImgError] = useState(false);
   const [teamColorClass, setTeamColorClass] = useState('');
+  const { isFavorite } = useFavorites();
+  
+  // Check if either team is a favorite
+  const isHomeTeamFavorite = isFavorite(game.homeTeam.id);
+  const isAwayTeamFavorite = isFavorite(game.awayTeam.id);
+  const hasFavoriteTeam = isHomeTeamFavorite || isAwayTeamFavorite;
   
   useEffect(() => {
     // Create dynamic team color classes
@@ -52,9 +60,12 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
     window.location.href = `/game/${game.id}`;
   };
 
+  // Add a visual indicator for detail view
+  const viewDetailsLabel = "Click for game details";
+
   return (
     <div 
-      className={`${styles.gameCard} ${teamColorClass} cursor-pointer hover:shadow-lg transition-shadow duration-300`}
+      className={`${styles.gameCard} ${teamColorClass} cursor-pointer hover:shadow-lg transition-shadow duration-300 ${hasFavoriteTeam ? 'ring-2 ring-yellow-400 dark:ring-yellow-600' : ''}`}
       aria-label={`Game: ${homeTeam.name} vs ${awayTeam.name}`}
       role="article"
       onClick={handleGameClick}
@@ -72,7 +83,13 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
         )}
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-4 relative">
+        <div className="absolute top-0 right-0 text-xs text-primary-600 dark:text-primary-400 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+          <span>{viewDetailsLabel}</span>
+        </div>
         {/* Home Team */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -86,9 +103,12 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
               />
             ) : (
               <div 
-                className={`${styles.teamAbbreviation} home-team-color`}
+                className={`${styles.teamAbbreviation} home-team-color relative group`}
               >
                 {homeTeam.abbreviation}
+                <div className="absolute -top-1 -right-1">
+                  <FavoriteButton teamId={homeTeam.id} />
+                </div>
               </div>
             )}
             <div>
@@ -116,9 +136,12 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
               />
             ) : (
               <div 
-                className={`${styles.teamAbbreviation} away-team-color`}
+                className={`${styles.teamAbbreviation} away-team-color relative group`}
               >
                 {awayTeam.abbreviation}
+                <div className="absolute -top-1 -right-1">
+                  <FavoriteButton teamId={awayTeam.id} />
+                </div>
               </div>
             )}
             <div>

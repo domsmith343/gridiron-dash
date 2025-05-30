@@ -5,6 +5,10 @@ import UpcomingGamesSection from '../components/UpcomingGamesSection';
 import LeagueStatistics from '../components/LeagueStatistics';
 import NewsFeed from '../components/NewsFeed';
 import ConnectionStatus from '../components/ConnectionStatus';
+import NotificationCenter from '../components/NotificationCenter';
+import NotificationWrapper from '../components/NotificationWrapper';
+import PlayerStatsLeaderboard from '../components/PlayerStatsLeaderboard';
+import ThemeToggle from '../components/ThemeToggle';
 import '../styles/global.css';
 ---
 
@@ -19,6 +23,16 @@ import '../styles/global.css';
 					<ConnectionStatus client:load />
 				</div>
 				<div class="flex items-center gap-4 mt-4 md:mt-0">
+					<a href="/tools" class="text-primary-700 dark:text-primary-200 hover:underline flex items-center gap-1">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+						</svg>
+						Tools
+					</a>
+					<NotificationWrapper client:load>
+						<NotificationCenter client:load />
+					</NotificationWrapper>
 					<div class="relative">
 						<input 
 							type="search" 
@@ -29,11 +43,7 @@ import '../styles/global.css';
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
 						</svg>
 					</div>
-					<button class="bg-white/80 dark:bg-gray-800/80 p-2 rounded-full">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-						</svg>
-					</button>
+					<ThemeToggle client:load className="ml-2" />
 				</div>
 			</header>
 			
@@ -73,6 +83,13 @@ import '../styles/global.css';
 						<LeagueStatistics client:load />
 					</section>
 
+					<!-- Player Stats Leaderboard Section -->
+					<section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
+						<NotificationWrapper client:load>
+							<PlayerStatsLeaderboard client:load limit={5} />
+						</NotificationWrapper>
+					</section>
+
 					<!-- News Feed Section -->
 					<section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
 						<h2 class="text-2xl font-semibold text-primary-700 dark:text-primary-200 mb-4 flex items-center gap-2">
@@ -84,26 +101,7 @@ import '../styles/global.css';
 				</div>
 			</div>
 
-			<!-- Upcoming Games Section -->
-			<section class="mt-8 col-span-full bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
-				<h2 class="text-2xl font-semibold text-primary-700 dark:text-primary-200 mb-4 flex items-center gap-2">
-					<span>Upcoming Games</span>
-					<span class="inline-block bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">SCHEDULED</span>
-				</h2>
-				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-					<!-- Placeholder for upcoming games component -->
-					<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex items-center justify-between">
-						<div class="flex items-center gap-2">
-							<span class="text-sm text-gray-500 dark:text-gray-400">Sun, 8:20 PM ET</span>
-						</div>
-						<div class="flex items-center gap-3">
-							<span class="font-bold">KC</span>
-							<span>@</span>
-							<span class="font-bold">BAL</span>
-						</div>
-					</div>
-				</div>
-			</section>
+			
 		</div>
 	</main>
 </Layout>
