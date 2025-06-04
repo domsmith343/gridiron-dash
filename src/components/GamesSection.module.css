@@ -1,0 +1,26 @@
+.liveGamesContainer {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.liveGamesContainer::-webkit-scrollbar {
+  height: 8px;
+  background: #f1f5f9;
+}
+
+.liveGamesContainer::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.liveGameCard {
+  min-width: 300px;
+  max-width: 340px;
+  flex: 0 0 auto;
+  /* You can add more styles for card appearance here */
+}

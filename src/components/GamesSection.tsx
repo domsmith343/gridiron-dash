@@ -4,6 +4,7 @@ import { GameCard } from './GameCard';
 import FavoritesWrapper from './FavoritesWrapper';
 import SearchFilter, { FilterOptions } from './SearchFilter';
 import type { Game } from '../types/game';
+import styles from './UpcomingGamesSection.module.css';
 
 const GamesSection: React.FC = () => {
   const { games, isLoading, error } = useGames();
@@ -89,12 +90,15 @@ const GamesSection: React.FC = () => {
   return (
     <div className="space-y-4">
       <SearchFilter onFilterChange={handleFilterChange} className="mb-6" />
-      
       <FavoritesWrapper>
         {noGamesMessage()}
-        {filteredGames.map((game) => (
-          <GameCard key={game.id} game={game} />
-        ))}
+        <div className={styles.upcomingGamesContainer}>
+          {filteredGames.map((game) => (
+            <div key={game.id} className={styles.upcomingGameCard}>
+              <GameCard game={game} />
+            </div>
+          ))}
+        </div>
       </FavoritesWrapper>
     </div>
   );

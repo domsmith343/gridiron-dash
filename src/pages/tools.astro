@@ -1,10 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import TeamComparisonTool from '../components/TeamComparisonTool';
-import FantasyFootball from '../components/FantasyFootball';
-import ConnectionStatus from '../components/ConnectionStatus';
-import NotificationCenter from '../components/NotificationCenter';
-import NotificationWrapper from '../components/NotificationWrapper';
+import TeamComparisonTool from '../components/TeamComparisonTool.tsx';
+import FantasyFootball from '../components/FantasyFootball.tsx';
+import ConnectionStatus from '../components/ConnectionStatus.tsx';
+import NotificationCenter from '../components/NotificationCenter.tsx';
+import NotificationWrapper from '../components/NotificationWrapper.tsx';
 import ThemeToggle from '../components/ThemeToggle';
 import '../styles/global.css';
 ---
@@ -15,7 +15,7 @@ import '../styles/global.css';
 			<header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
 				<div class="flex items-center gap-4">
 					<a href="/" class="text-primary-700 dark:text-primary-200 hover:underline flex items-center gap-2">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
 						</svg>
 						Back to Dashboard
@@ -37,14 +37,14 @@ import '../styles/global.css';
 				<!-- Team Comparison Tool Section -->
 				<section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
 					<NotificationWrapper client:load>
-						<TeamComparisonTool client:load />
+						<TeamComparisonTool client:idle />
 					</NotificationWrapper>
 				</section>
 
 				<!-- Fantasy Football Section -->
 				<section class="bg-white/90 dark:bg-gray-900/80 rounded-xl shadow-lg p-6 border border-primary-100 dark:border-primary-800">
 					<NotificationWrapper client:load>
-						<FantasyFootball client:load />
+						<FantasyFootball client:idle />
 					</NotificationWrapper>
 				</section>
 			</div>
