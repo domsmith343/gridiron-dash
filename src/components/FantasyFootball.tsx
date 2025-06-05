@@ -1,32 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { teams } from '../services/mockData';
+import { teams, FantasyPlayer, generateMockPlayers } from '../services/mockData';
 import DetailedPlayerStats from './DetailedPlayerStats';
 import { websocketService } from '../services/websocket';
+import FavoriteButton from './FavoriteButton';
 
-// Types for fantasy football
-interface FantasyPlayer {
-  id: string;
-  name: string;
-  position: 'QB' | 'RB' | 'WR' | 'TE' | 'K' | 'DEF';
-  team: string;
-  teamId: string;
-  projectedPoints: number;
-  actualPoints: number;
-  status: 'active' | 'injured' | 'questionable' | 'out';
-  stats: {
-    passingYards?: number;
-    passingTDs?: number;
-    interceptions?: number;
-    rushingYards?: number;
-    rushingTDs?: number;
-    receivingYards?: number;
-    receivingTDs?: number;
-    receptions?: number;
-    fieldGoals?: number;
-    extraPoints?: number;
-  };
-  avatarUrl?: string;
-}
+// FantasyPlayer interface is now imported from mockData.ts
 
 interface FantasyTeam {
   id: string;
@@ -49,242 +27,7 @@ const FantasyFootball: React.FC<FantasyFootballProps> = ({ className = '' }) => 
   const [loading, setLoading] = useState(true);
   const [selectedPosition, setSelectedPosition] = useState<string>('ALL');
 
-  // Generate mock fantasy players
-  const generateMockPlayers = (): FantasyPlayer[] => {
-    const positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'] as const;
-    const statuses = ['active', 'injured', 'questionable', 'out'] as const;
-    
-    const players: FantasyPlayer[] = [
-      {
-        id: 'p1',
-        name: 'Patrick Mahomes',
-        position: 'QB',
-        team: 'Kansas City Chiefs',
-        teamId: 'KC',
-        projectedPoints: 22.5,
-        actualPoints: 24.3,
-        status: 'active',
-        stats: {
-          passingYards: 328,
-          passingTDs: 3,
-          interceptions: 1,
-          rushingYards: 15,
-          rushingTDs: 0
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=PM&background=E31837&color=fff'
-      },
-      {
-        id: 'p2',
-        name: 'Christian McCaffrey',
-        position: 'RB',
-        team: 'San Francisco 49ers',
-        teamId: 'SF',
-        projectedPoints: 18.7,
-        actualPoints: 21.2,
-        status: 'active',
-        stats: {
-          rushingYards: 102,
-          rushingTDs: 1,
-          receptions: 6,
-          receivingYards: 52,
-          receivingTDs: 1
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=CM&background=AA0000&color=fff'
-      },
-      {
-        id: 'p3',
-        name: 'Tyreek Hill',
-        position: 'WR',
-        team: 'Miami Dolphins',
-        teamId: 'MIA',
-        projectedPoints: 17.3,
-        actualPoints: 19.8,
-        status: 'active',
-        stats: {
-          receptions: 8,
-          receivingYards: 138,
-          receivingTDs: 1
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=TH&background=008E97&color=fff'
-      },
-      {
-        id: 'p4',
-        name: 'Travis Kelce',
-        position: 'TE',
-        team: 'Kansas City Chiefs',
-        teamId: 'KC',
-        projectedPoints: 14.2,
-        actualPoints: 12.7,
-        status: 'active',
-        stats: {
-          receptions: 7,
-          receivingYards: 87,
-          receivingTDs: 0
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=TK&background=E31837&color=fff'
-      },
-      {
-        id: 'p5',
-        name: 'Justin Tucker',
-        position: 'K',
-        team: 'Baltimore Ravens',
-        teamId: 'BAL',
-        projectedPoints: 8.5,
-        actualPoints: 9.0,
-        status: 'active',
-        stats: {
-          fieldGoals: 3,
-          extraPoints: 3
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=JT&background=241773&color=fff'
-      },
-      {
-        id: 'p6',
-        name: 'San Francisco',
-        position: 'DEF',
-        team: 'San Francisco 49ers',
-        teamId: 'SF',
-        projectedPoints: 7.8,
-        actualPoints: 12.0,
-        status: 'active',
-        stats: {},
-        avatarUrl: 'https://ui-avatars.com/api/?name=SF&background=AA0000&color=fff'
-      },
-      {
-        id: 'p7',
-        name: 'Josh Allen',
-        position: 'QB',
-        team: 'Buffalo Bills',
-        teamId: 'BUF',
-        projectedPoints: 21.3,
-        actualPoints: 26.7,
-        status: 'active',
-        stats: {
-          passingYards: 287,
-          passingTDs: 2,
-          interceptions: 0,
-          rushingYards: 56,
-          rushingTDs: 1
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=JA&background=00338D&color=fff'
-      },
-      {
-        id: 'p8',
-        name: 'Jalen Hurts',
-        position: 'QB',
-        team: 'Philadelphia Eagles',
-        teamId: 'PHI',
-        projectedPoints: 20.5,
-        actualPoints: 22.1,
-        status: 'active',
-        stats: {
-          passingYards: 243,
-          passingTDs: 1,
-          interceptions: 0,
-          rushingYards: 45,
-          rushingTDs: 2
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=JH&background=004C54&color=fff'
-      },
-      {
-        id: 'p9',
-        name: 'A.J. Brown',
-        position: 'WR',
-        team: 'Philadelphia Eagles',
-        teamId: 'PHI',
-        projectedPoints: 15.8,
-        actualPoints: 17.2,
-        status: 'active',
-        stats: {
-          receptions: 7,
-          receivingYards: 112,
-          receivingTDs: 1
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=AB&background=004C54&color=fff'
-      },
-      {
-        id: 'p10',
-        name: 'Stefon Diggs',
-        position: 'WR',
-        team: 'Buffalo Bills',
-        teamId: 'BUF',
-        projectedPoints: 14.5,
-        actualPoints: 16.3,
-        status: 'active',
-        stats: {
-          receptions: 8,
-          receivingYards: 103,
-          receivingTDs: 1
-        },
-        avatarUrl: 'https://ui-avatars.com/api/?name=SD&background=00338D&color=fff'
-      }
-    ];
-    
-    // Generate additional players to have a good selection
-    for (let i = 11; i <= 50; i++) {
-      const teamIndex = i % teams.length;
-      const positionIndex = i % positions.length;
-      const statusIndex = Math.floor(Math.random() * statuses.length);
-      
-      const position = positions[positionIndex];
-      const team = teams[teamIndex];
-      
-      // Generate random stats based on position
-      const stats: FantasyPlayer['stats'] = {};
-      
-      if (position === 'QB') {
-        stats.passingYards = 150 + Math.floor(Math.random() * 250);
-        stats.passingTDs = Math.floor(Math.random() * 4);
-        stats.interceptions = Math.floor(Math.random() * 3);
-        stats.rushingYards = Math.floor(Math.random() * 40);
-        stats.rushingTDs = Math.random() > 0.8 ? 1 : 0;
-      } else if (position === 'RB') {
-        stats.rushingYards = 40 + Math.floor(Math.random() * 100);
-        stats.rushingTDs = Math.random() > 0.7 ? 1 : 0;
-        stats.receptions = Math.floor(Math.random() * 5);
-        stats.receivingYards = Math.floor(Math.random() * 50);
-        stats.receivingTDs = Math.random() > 0.9 ? 1 : 0;
-      } else if (position === 'WR' || position === 'TE') {
-        stats.receptions = Math.floor(Math.random() * 8);
-        stats.receivingYards = 20 + Math.floor(Math.random() * 100);
-        stats.receivingTDs = Math.random() > 0.8 ? 1 : 0;
-      } else if (position === 'K') {
-        stats.fieldGoals = Math.floor(Math.random() * 4);
-        stats.extraPoints = Math.floor(Math.random() * 5);
-      }
-      
-      // Calculate fantasy points based on stats
-      let projectedPoints = 0;
-      if (stats.passingYards) projectedPoints += stats.passingYards * 0.04;
-      if (stats.passingTDs) projectedPoints += stats.passingTDs * 4;
-      if (stats.interceptions) projectedPoints -= stats.interceptions;
-      if (stats.rushingYards) projectedPoints += stats.rushingYards * 0.1;
-      if (stats.rushingTDs) projectedPoints += stats.rushingTDs * 6;
-      if (stats.receptions) projectedPoints += stats.receptions * 0.5;
-      if (stats.receivingYards) projectedPoints += stats.receivingYards * 0.1;
-      if (stats.receivingTDs) projectedPoints += stats.receivingTDs * 6;
-      if (stats.fieldGoals) projectedPoints += stats.fieldGoals * 3;
-      if (stats.extraPoints) projectedPoints += stats.extraPoints;
-      
-      // Add some randomness to actual points
-      const actualPoints = projectedPoints * (0.8 + Math.random() * 0.4);
-      
-      players.push({
-        id: `p${i}`,
-        name: `Player ${i}`,
-        position,
-        team: `${team.city} ${team.name}`,
-        teamId: team.id,
-        projectedPoints: parseFloat(projectedPoints.toFixed(1)),
-        actualPoints: parseFloat(actualPoints.toFixed(1)),
-        status: statuses[statusIndex],
-        stats,
-        avatarUrl: `https://ui-avatars.com/api/?name=P${i}&background=${team.primaryColor ? team.primaryColor.replace('#', '') : '333333'}&color=fff`
-      });
-    }
-    
-    return players;
-  };
+
 
   // Create a mock fantasy team
   const createMockTeam = (players: FantasyPlayer[]): FantasyTeam => {
@@ -313,6 +56,117 @@ const FantasyFootball: React.FC<FantasyFootballProps> = ({ className = '' }) => 
       projectedPoints: parseFloat(projectedPoints.toFixed(1)),
       actualPoints: parseFloat(actualPoints.toFixed(1))
     };
+  };
+
+    // Render the Top Players tab
+  const renderTopPlayersTab = () => {
+    if (loading) return <div className="text-center py-8">Loading top players...</div>;
+    if (!topPlayers.length && !loading) return <div className="text-center py-8">No top players data available.</div>;
+
+    const filteredPlayers = selectedPosition === 'ALL'
+      ? topPlayers
+      : topPlayers.filter(p => p.position === selectedPosition);
+
+    // Unique positions for filter dropdown
+    const positions = ['ALL', ...new Set(topPlayers.map(p => p.position).sort())];
+
+    return (
+      <div>
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">Top Available Players</h3>
+          <div className="flex items-center gap-2">
+            <label htmlFor="position-filter" className="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by Position:</label>
+            <select
+              id="position-filter"
+              value={selectedPosition}
+              onChange={(e) => setSelectedPosition(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+            >
+              {positions.map(pos => (
+                <option key={pos} value={pos}>{pos}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        {selectedPlayer ? (
+          <div className="mb-4">
+            <button 
+              onClick={() => setSelectedPlayer(null)}
+              className="mb-4 flex items-center text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Top Players
+            </button>
+            <DetailedPlayerStats player={selectedPlayer} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredPlayers.map(player => (
+              <div key={player.id} className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                <div className="flex items-start mb-3">
+                  <img 
+                    src={player.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=random&color=fff`} 
+                    alt={`${player.name} avatar`}
+                    className="w-16 h-16 rounded-full mr-4 border-2 border-gray-200 dark:border-gray-700"
+                    onError={(e) => (e.currentTarget.src = 'https://ui-avatars.com/api/?name=P&background=cccccc&color=fff')} // Fallback
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-lg text-gray-800 dark:text-white truncate" title={player.name}>{player.name}</h4>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{player.position} • {player.team}</p>
+                  </div>
+                  <FavoriteButton itemId={player.id} itemType="player" itemName={player.name} className="ml-2 flex-shrink-0" />
+                </div>
+                <div className="text-sm space-y-1 mb-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Actual Pts:</span> 
+                    <span className="font-semibold text-gray-800 dark:text-white">{player.actualPoints.toFixed(1)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Projected Pts:</span>
+                    <span className="text-gray-500 dark:text-gray-400">{player.projectedPoints.toFixed(1)}</span>
+                  </div>
+                </div>
+                {player.status !== 'active' && (
+                  <p className={`text-xs font-semibold mb-2 ${ 
+                    player.status === 'injured' || player.status === 'out' 
+                      ? 'text-red-500' 
+                      : player.status === 'questionable' ? 'text-yellow-500' : 'text-gray-500'
+                  }`}>
+                    Status: {player.status.toUpperCase()}
+                  </p>
+                )}
+                <button 
+                  onClick={() => setSelectedPlayer(player)} 
+                  className="mt-auto w-full text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium py-2 px-3 rounded-md bg-primary-50 dark:bg-primary-700 dark:hover:bg-primary-600 hover:bg-primary-100 transition-colors"
+                >
+                  View Detailed Stats
+                </button>
+              </div> 
+            ))}
+            {filteredPlayers.length === 0 && !loading && (
+              <p className="col-span-full text-center text-gray-500 dark:text-gray-400 py-8">
+                No players match the selected position.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Render the Matchup tab (Placeholder)
+  const renderMatchupTab = () => {
+    return (
+      <div className="text-center py-12">
+        <svg className="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <h3 className="mt-2 text-xl font-semibold text-gray-800 dark:text-white">Matchup Analysis</h3>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Detailed matchup breakdowns are coming soon. Check back later!</p>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -398,11 +252,56 @@ const renderMyTeamTab = () => {
   );
 };
 
-return (
-  <div className={className}>
-    {renderMyTeamTab()}
-  </div>
-);
-};
+
+  return (
+    <div className={`fantasy-football-container ${className} bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 rounded-lg shadow-md`}>
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto" aria-label="Tabs">
+          {(['myTeam', 'topPlayers', 'matchup'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => {
+                setActiveTab(tab);
+                setSelectedPlayer(null); // Reset selected player when changing tabs
+              }}
+              className={`whitespace-nowrap pb-3 px-3 border-b-2 font-medium text-sm transition-colors duration-150 ease-in-out
+                focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50 rounded-t-md
+                ${activeTab === tab
+                  ? 'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-300'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'
+                }
+              `}
+              aria-current={activeTab === tab ? 'page' : undefined}
+            >
+              {tab === 'myTeam' && 'My Team'}
+              {tab === 'topPlayers' && 'Top Players'}
+              {tab === 'matchup' && 'Matchup'}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Content Area */}
+      <div className="mt-4 min-h-[300px]">
+        {loading && (
+          <div className="flex justify-center items-center py-12 h-full">
+            <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-primary-600 dark:text-primary-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span className="text-lg text-gray-700 dark:text-gray-300">Loading Fantasy Data...</span>
+          </div>
+        )}
+        {!loading && (
+          <>
+            {activeTab === 'myTeam' && renderMyTeamTab()}
+            {activeTab === 'topPlayers' && renderTopPlayersTab()}
+            {activeTab === 'matchup' && renderMatchupTab()}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}; // Closes the FantasyFootball component
 
 export default FantasyFootball;

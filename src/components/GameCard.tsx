@@ -107,7 +107,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
               >
                 {homeTeam.abbreviation}
                 <div className="absolute -top-1 -right-1">
-                  <FavoriteButton teamId={homeTeam.id} />
+                  <FavoriteButton itemId={homeTeam.id} itemType="team" itemName={homeTeam.name} />
                 </div>
               </div>
             )}
@@ -140,7 +140,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
               >
                 {awayTeam.abbreviation}
                 <div className="absolute -top-1 -right-1">
-                  <FavoriteButton teamId={awayTeam.id} />
+                  <FavoriteButton itemId={awayTeam.id} itemType="team" itemName={awayTeam.name} />
                 </div>
               </div>
             )}

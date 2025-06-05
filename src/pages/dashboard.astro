@@ -1,9 +1,16 @@
 ---
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import GamesSection from '../components/GamesSection';
+import FavoritesSection from '../components/FavoritesSection';
 ---
 
 <DashboardLayout>
+  <section class="favorites-dashboard-section mb-8">
+    <h2 class="text-2xl font-bold mb-3 flex items-center gap-2">
+      <span>⭐</span> My Favorites
+    </h2>
+    <FavoritesSection limit={3} showSeeAll={true} client:load />
+  </section>
   <div class="dashboard-overview">
     <div class="welcome-section">
       <h2>Welcome to Gridiron Dash</h2>

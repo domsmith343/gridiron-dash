@@ -2,21 +2,39 @@ import React from 'react';
 import { useFavorites } from '../context/FavoritesContext';
 
 interface FavoriteButtonProps {
-  teamId: string;
+  itemId: string;
+  itemType: 'team' | 'player';
+  itemName?: string; // For more descriptive aria-labels/titles
   className?: string;
 }
 
-const FavoriteButton: React.FC<FavoriteButtonProps> = ({ teamId, className = '' }) => {
-  const { isFavorite, addFavoriteTeam, removeFavoriteTeam } = useFavorites();
-  const isFav = isFavorite(teamId);
+const FavoriteButton: React.FC<FavoriteButtonProps> = ({ itemId, itemType, itemName, className = '' }) => {
+  const {
+    isFavorite,
+    addFavoriteTeam,
+    removeFavoriteTeam,
+    isFavoritePlayer,
+    addFavoritePlayer,
+    removeFavoritePlayer
+  } = useFavorites();
+
+  const isFav = itemType === 'team' ? isFavorite(itemId) : isFavoritePlayer(itemId);
 
   const toggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent triggering parent click events (like game card navigation)
     
-    if (isFav) {
-      removeFavoriteTeam(teamId);
-    } else {
-      addFavoriteTeam(teamId);
+    if (itemType === 'team') {
+      if (isFav) {
+        removeFavoriteTeam(itemId);
+      } else {
+        addFavoriteTeam(itemId);
+      }
+    } else { // itemType === 'player'
+      if (isFav) {
+        removeFavoritePlayer(itemId);
+      } else {
+        addFavoritePlayer(itemId);
+      }
     }
   };
 
@@ -24,8 +42,8 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ teamId, className = '' 
     <button
       onClick={toggleFavorite}
       className={`favorite-button ${isFav ? 'active' : ''} ${className}`}
-      aria-label={isFav ? `Remove ${teamId} from favorites` : `Add ${teamId} to favorites`}
-      title={isFav ? `Remove from favorites` : `Add to favorites`}
+      aria-label={isFav ? `Remove ${itemName || itemId} from favorites` : `Add ${itemName || itemId} to favorites`}
+      title={isFav ? `Remove ${itemName || itemType} from favorites` : `Add ${itemName || itemType} to favorites`}
     >
       {isFav ? (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-yellow-500">

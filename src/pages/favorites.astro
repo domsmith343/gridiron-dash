@@ -1,0 +1,14 @@
+---
+import FavoritesSection from '../components/FavoritesSection';
+---
+
+<main class="favorites-page container mx-auto py-8">
+  <h1 class="text-3xl font-bold mb-6">My Favorites</h1>
+  <FavoritesSection client:load />
+</main>
+
+<style>
+.favorites-page {
+  min-height: 60vh;
+}
+</style>
