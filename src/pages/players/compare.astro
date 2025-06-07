@@ -1,0 +1,120 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+// Mock player data - in a real app, you'd fetch this from a database or API
+// For now, we'll redefine it here. In a real app, consider moving this to a /data folder or API.
+interface PlayerStats {
+  passingYards?: number;
+  touchdowns?: number;
+  interceptions?: number;
+  receptions?: number;
+  receivingYards?: number;
+  sacks?: number;
+  tackles?: number;
+  forcedFumbles?: number;
+}
+interface Player {
+  id: string;
+  name: string;
+  team: string;
+  position: string;
+  jersey?: string; // Optional as not all views need it
+  photoUrl?: string; // Optional
+  stats: PlayerStats;
+}
+const mockPlayers: Record<string, Player> = {
+  '1': { id: '1', name: 'Patrick Mahomes', team: 'Kansas City Chiefs', position: 'QB', jersey: '15', photoUrl: '/images/players/mahomes.png', stats: { passingYards: 5250, touchdowns: 41, interceptions: 12 } },
+  '2': { id: '2', name: 'Justin Jefferson', team: 'Minnesota Vikings', position: 'WR', jersey: '18', photoUrl: '/images/players/jefferson.png', stats: { receptions: 128, receivingYards: 1809, touchdowns: 8 } },
+  '3': { id: '3', name: 'Micah Parsons', team: 'Dallas Cowboys', position: 'LB', jersey: '11', photoUrl: '/images/players/parsons.png', stats: { sacks: 13.5, tackles: 65, forcedFumbles: 3 } },
+  // Add more players if needed for comparison testing
+  '4': { id: '4', name: 'Josh Allen', team: 'Buffalo Bills', position: 'QB', jersey: '17', photoUrl: '/images/players/allen.png', stats: { passingYards: 4283, touchdowns: 35, interceptions: 14 } },
+  '5': { id: '5', name: 'Tyreek Hill', team: 'Miami Dolphins', position: 'WR', jersey: '10', photoUrl: '/images/players/hill.png', stats: { receptions: 119, receivingYards: 1710, touchdowns: 7 } },
+};
+
+const allPlayersArray = Object.values(mockPlayers);
+
+// This page will require client-side interactivity for selecting players and updating the comparison.
+// We'll set up the basic structure here and can add a <script> tag or import a .js/.ts file later.
+---
+
+<Layout title="Compare NFL Players">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Player Comparison</h1>
+      <a href="/players" class="text-primary-600 dark:text-primary-400 hover:underline">&larr; Back to Player Directory</a>
+    </div>
+
+    {/* Player Selection Section - Placeholder */}
+    <section id="player-selection" class="mb-10 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+      <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Select Players to Compare (2-4)</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Placeholder for player 1 selection -->
+        <div class="border p-4 rounded-md border-gray-300 dark:border-gray-600">
+          <label for="player1-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Player 1</label>
+          <select id="player1-select" name="player1" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-gray-900 dark:text-gray-100">
+            <option value="">Select Player</option>
+            {allPlayersArray.map(p => <option value={p.id}>{p.name} ({p.position})</option>)}
+          </select>
+        </div>
+        <!-- Placeholder for player 2 selection -->
+        <div class="border p-4 rounded-md border-gray-300 dark:border-gray-600">
+          <label for="player2-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Player 2</label>
+          <select id="player2-select" name="player2" class="mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-gray-900 dark:text-gray-100">
+            <option value="">Select Player</option>
+            {allPlayersArray.map(p => <option value={p.id}>{p.name} ({p.position})</option>)}
+          </select>
+        </div>
+        {/* Add more selectors if allowing >2 players, or implement dynamically */}
+      </div>
+      <button id="compare-button" class="mt-6 bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
+        disabled
+      >
+        Compare Players
+      </button>
+    </section>
+
+    {/* Comparison Display Section - Placeholder */}
+    <section id="comparison-results" class="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg hidden">
+      <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Comparison Details</h2>
+      <p class="text-gray-600 dark:text-gray-400">Player statistics will be displayed side-by-side here.</p>
+      {/* This area will be populated dynamically with JavaScript */}
+    </section>
+  </div>
+
+  <script>
+    // Basic client-side script to handle selections and comparison display
+    const player1Select = document.getElementById('player1-select') as HTMLSelectElement;
+    const player2Select = document.getElementById('player2-select') as HTMLSelectElement;
+    const compareButton = document.getElementById('compare-button') as HTMLButtonElement;
+    const comparisonResultsSection = document.getElementById('comparison-results');
+    
+    const mockPlayersData = JSON.parse('{}'); // Injected by Astro later if needed, or fetched
+
+    function checkSelections() {
+      if (player1Select.value && player2Select.value && player1Select.value !== player2Select.value) {
+        compareButton.disabled = false;
+      } else {
+        compareButton.disabled = true;
+      }
+    }
+
+    player1Select.addEventListener('change', checkSelections);
+    player2Select.addEventListener('change', checkSelections);
+
+    compareButton.addEventListener('click', () => {
+      if (!comparisonResultsSection) return;
+      // For now, just show the section. Actual data population will be more complex.
+      comparisonResultsSection.classList.remove('hidden');
+      comparisonResultsSection.innerHTML = `
+        <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">Comparison Details</h2>
+        <p class="text-gray-700 dark:text-gray-300">Comparing player with ID: <strong>${player1Select.value}</strong> vs player with ID: <strong>${player2Select.value}</strong></p>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Detailed stats comparison table will go here.</p>
+      `;
+      // Scroll to results
+      comparisonResultsSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Initial check
+    checkSelections();
+  </script>
+</Layout>
