@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Mock player data - ideally, this would come from a shared data source or API
+// For now, we'll redefine it here. In a real app, consider moving this to a /data folder or API.
+const mockPlayers = {
+  '1': { id: '1', name: 'Patrick Mahomes', team: 'Kansas City Chiefs', position: 'QB', photoUrl: '/images/players/mahomes.png' },
+  '2': { id: '2', name: 'Justin Jefferson', team: 'Minnesota Vikings', position: 'WR', photoUrl: '/images/players/jefferson.png' },
+  '3': { id: '3', name: 'Micah Parsons', team: 'Dallas Cowboys', position: 'LB', photoUrl: '/images/players/parsons.png' },
+};
+
+const playersArray = Object.values(mockPlayers);
+---
+
+<Layout title="NFL Players">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">NFL Player Directory</h1>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {playersArray.map(player => (
+        <a href={`/players/${player.id}`} class="block bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out">
+          <div class="relative pb-[100%]"> {/* Aspect ratio 1:1 for the image container */}
+            <img 
+              src={player.photoUrl || '/images/placeholder-player.png'} 
+              alt={`${player.name}`}
+              class="absolute top-0 left-0 w-full h-full object-cover"
+              onerror="this.onerror=null; this.src='/images/placeholder-avatar.svg';" />
+          </div>
+          <div class="p-4">
+            <h2 class="text-xl font-semibold text-gray-800">{player.name}</h2>
+            <p class="text-sm text-gray-600">{player.position} - {player.team}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    {playersArray.length === 0 && (
+      <p class="text-center text-gray-500 mt-10">No players available at the moment.</p>
+    )}
+  </div>
+</Layout>
+
+<style>
+  /* Add a fallback style for images if needed, or ensure placeholder-avatar.svg exists */
+</style>
