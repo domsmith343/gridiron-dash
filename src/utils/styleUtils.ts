@@ -90,3 +90,9 @@ export const applyTeamColors = (homeColor: string | undefined, awayColor: string
     styleElement.innerHTML = cssString;
   }
 };
+
+/**
+ * Legacy function name for backward compatibility
+ * Creates team color styles and returns the class name
+ */
+export const createTeamColorStyles = injectTeamColorStyles;

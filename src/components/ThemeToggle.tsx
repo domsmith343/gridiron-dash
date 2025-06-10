@@ -1,34 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 interface ThemeToggleProps {
   className?: string;
 }
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
-  const [isDark, setIsDark] = useState(false);
+// Initialize theme state based on localStorage or system preference
+const getInitialTheme = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  
+  // First check localStorage
+  if ('theme' in localStorage) {
+    return localStorage.theme === 'dark';
+  }
+  
+  // Then check system preference
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
 
-  // Initialize theme state based on localStorage or system preference
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const isDarkMode = 
-        localStorage.theme === 'dark' || 
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      
-      setIsDark(isDarkMode);
-    }
-  }, []);
+// Apply theme to document
+const applyTheme = (isDark: boolean) => {
+  if (typeof window === 'undefined') return;
+  
+  const root = document.documentElement;
+  if (isDark) {
+    root.classList.add('dark');
+    localStorage.theme = 'dark';
+  } else {
+    root.classList.remove('dark');
+    localStorage.theme = 'light';
+  }
+};
+
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
+  // Initialize state with function to ensure it only runs once
+  const [isDark, setIsDark] = useState(() => {
+    const initialTheme = getInitialTheme();
+    // Apply theme on initial render
+    applyTheme(initialTheme);
+    return initialTheme;
+  });
 
   const toggleTheme = () => {
-    if (typeof window !== 'undefined') {
-      if (isDark) {
-        document.documentElement.classList.remove('dark');
-        localStorage.theme = 'light';
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.theme = 'dark';
-      }
-      setIsDark(!isDark);
-    }
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    applyTheme(newTheme);
   };
 
   return (

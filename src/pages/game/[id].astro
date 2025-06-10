@@ -4,6 +4,15 @@ import GameDetail from '../../components/GameDetail';
 import ConnectionStatus from '../../components/ConnectionStatus';
 import '../../styles/global.css';
 
+export async function getStaticPaths() {
+  // Generate static paths for common game IDs or set prerender to false for dynamic routing
+  const gameIds = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  
+  return gameIds.map((id) => ({
+    params: { id },
+  }));
+}
+
 const { id } = Astro.params;
 ---
 
