@@ -8,17 +8,17 @@ import {
   useTestUser,
   mockLocalStorage,
   mockIntersectionObserver,
-} from '../utils/testUtils';
+} from '../../utils/testUtils';
 
 // Import components to test
-import { Form, Field, Input, SubmitButton } from '../components/ui/Form';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Loading } from '../components/ui/Loading';
-import { TabNavigation } from '../components/ui/TabNavigation';
-import { LineChart, BarChart, PieChart } from '../components/ui/Charts';
-import Dashboard from '../components/Dashboard';
-import Settings from '../components/Settings';
+import { Form, Field, Input, SubmitButton } from '../ui/Form';
+import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { Loading } from '../ui/Loading';
+import { TabNavigation } from '../ui/TabNavigation';
+import { LineChart, BarChart, PieChart } from '../ui/Charts';
+import Dashboard from '../Dashboard';
+import Settings from '../Settings';
 
 // Mock modules
 vi.mock('../hooks/useApi');
