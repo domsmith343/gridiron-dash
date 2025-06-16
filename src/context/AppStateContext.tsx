@@ -46,7 +46,7 @@ const initialState: AppState = {
   currentWeek: 1,
   currentSeason: new Date().getFullYear(),
   favorites: {
-    players: JSON.parse(localStorage.getItem('favoriteP layers') || '[]'),
+    players: JSON.parse(localStorage.getItem('favoritePlayers') || '[]'),
     teams: JSON.parse(localStorage.getItem('favoriteTeams') || '[]'),
   },
   settings: {

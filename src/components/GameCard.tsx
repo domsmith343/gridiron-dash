@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Game } from '../types/game';
 import styles from './GameCard.module.css';
 import { createTeamColorStyles } from '../utils/styleUtils';
@@ -40,6 +41,8 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
     weather
   } = game;
 
+  const navigate = useNavigate();
+
   const getStatusClass = (status: string) => {
     switch (status) {
       case 'LIVE':
@@ -56,8 +59,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
   };
 
   const handleGameClick = () => {
-    // Navigate to the game detail page
-    window.location.href = `/game/${game.id}`;
+    navigate(`/game/${game.id}`);
   };
 
   // Add a visual indicator for detail view
