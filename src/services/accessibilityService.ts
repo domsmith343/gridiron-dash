@@ -17,6 +17,7 @@ class AccessibilityService {
   private settings: AccessibilitySettings;
   private focusHistory: HTMLElement[] = [];
   private keyboardNavigationMap: Map<string, () => void> = new Map();
+  private boundHandleGlobalKeydown = this.handleGlobalKeydown.bind(this);
 
   constructor() {
     this.settings = this.getStoredSettings();
@@ -75,7 +76,7 @@ class AccessibilityService {
    * Setup global keyboard navigation
    */
   private setupKeyboardNavigation(): void {
-    document.addEventListener('keydown', this.handleGlobalKeydown.bind(this));
+    document.addEventListener('keydown', this.boundHandleGlobalKeydown);
     
     // Common keyboard shortcuts
     this.keyboardNavigationMap.set('Alt+1', () => this.skipToMainContent());
@@ -426,8 +427,8 @@ class AccessibilityService {
     if (this.liveRegion) {
       this.liveRegion.remove();
     }
-    
-    document.removeEventListener('keydown', this.handleGlobalKeydown);
+
+    document.removeEventListener('keydown', this.boundHandleGlobalKeydown);
   }
 }
 
