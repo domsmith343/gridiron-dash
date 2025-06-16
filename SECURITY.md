@@ -10,7 +10,7 @@ We currently support the following versions with security updates:
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within this project, please send an email to [YOUR_EMAIL]. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this project, please send an email to <security@example.com>. All security vulnerabilities will be promptly addressed.
 
 Please include the following information in your report:
 
