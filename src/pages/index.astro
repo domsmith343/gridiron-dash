@@ -8,6 +8,7 @@ import ConnectionStatus from '../components/ConnectionStatus';
 import NotificationCenter from '../components/NotificationCenter';
 import NotificationWrapper from '../components/NotificationWrapper';
 import PlayerStatsLeaderboard from '../components/PlayerStatsLeaderboard';
+import ThemeToggle from '../components/ThemeToggle';
 
 import '../styles/global.css';
 ---
@@ -41,6 +42,7 @@ import '../styles/global.css';
 					<NotificationWrapper client:load>
 						<NotificationCenter client:load />
 					</NotificationWrapper>
+					<ThemeToggle client:load />
 					<div class="relative">
 						<input 
 							type="search" 
