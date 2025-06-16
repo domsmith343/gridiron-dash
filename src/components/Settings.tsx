@@ -133,7 +133,10 @@ function AccessibilitySettings() {
     document.documentElement.classList.toggle('large-text', data.largeText);
     
     // Update accessibility service
-    accessibilityService.updatePreferences({
+    accessibilityService.updateSettings({
+      reduceMotion: data.reduceMotion,
+      highContrast: data.highContrast,
+      fontSize: data.largeText ? 'large' : 'normal',
       screenReaderOptimized: data.screenReaderOptimized,
       keyboardNavigation: data.keyboardNavigation,
     });
