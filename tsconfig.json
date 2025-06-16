@@ -14,7 +14,12 @@
     "jsxImportSource": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "types": ["astro/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
