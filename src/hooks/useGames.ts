@@ -18,9 +18,15 @@ export const useGames = () => {
       setIsLoading(false);
     });
 
+    // Subscribe to errors
+    const unsubscribeErrors = websocketService.subscribeToErrors(err => {
+      setError(new Error(err));
+    });
+
     // Cleanup on unmount
     return () => {
       unsubscribe();
+      unsubscribeErrors();
       websocketService.disconnect();
     };
   }, []);

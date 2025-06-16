@@ -73,14 +73,13 @@ export function useThrottle<T extends (...args: any[]) => any>(
  */
 export function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T>();
-  
-  useMemo(() => {
-    const previousValue = ref.current;
+  const prev = ref.current;
+
+  useEffect(() => {
     ref.current = value;
-    return previousValue;
   }, [value]);
-  
-  return ref.current;
+
+  return prev;
 }
 
 /**
