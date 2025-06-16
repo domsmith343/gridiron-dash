@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import ErrorBoundary from '../components/ErrorBoundary';
-import Loading from '../components/ui/Loading';
-import Button from '../components/ui/Button';
-import TabNavigation from '../components/ui/TabNavigation';
-import { Card, CardHeader, CardContent, CardFooter } from '../components/ui/Card';
+import ErrorBoundary from '../ErrorBoundary';
+import Loading from '../ui/Loading';
+import Button from '../ui/Button';
+import TabNavigation from '../ui/TabNavigation';
+import { Card, CardHeader, CardContent, CardFooter } from '../ui/Card';
 
 // Mock console.error to avoid noise in test output
 const mockConsoleError = vi.fn();
