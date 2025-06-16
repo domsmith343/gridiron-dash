@@ -441,7 +441,7 @@ function About() {
               <li>• Frontend: Astro, React, TypeScript</li>
               <li>• Styling: Tailwind CSS</li>
               <li>• State Management: React Context</li>
-              <li>• Testing: Jest, React Testing Library</li>
+              <li>• Testing: Vitest, React Testing Library</li>
               <li>• Build: Vite</li>
             </ul>
           </div>
