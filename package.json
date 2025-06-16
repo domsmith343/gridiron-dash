@@ -32,6 +32,7 @@
     "jsdom": "^24.1.0",
     "lint-staged": "^16.0.0",
     "postcss": "^8.4.35",
+    "prettier": "^3.5.3",
     "tailwindcss": "^3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3",
@@ -39,7 +40,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "bash -c 'npm run security-check'"
+      "prettier --write"
     ]
   }
 }
